@@ -1,0 +1,549 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>for your eyes only</title>
+        <style>
+            #gamescreen {
+                background: black;
+                width: 100%;
+                height: 100vh;
+            }
+            
+            body {
+                margin: 0px;
+                image-rendering: crisp-edges;
+                image-rendering: -moz-crisp-edges;          /* Firefox */
+                image-rendering: -o-crisp-edges;            /* Opera */
+                image-rendering: -webkit-optimize-contrast; /* Webkit (non-standard naming)*/
+                -ms-interpolation-mode: nearest-neighbor;   /* IE (non-standard property) */
+                image-rendering: pixelated; /* Webkit (non-standard naming)*/
+                overflow: hidden;
+                font-family: 'Yuji Boku', serif;
+            }
+            
+            .domSprite {
+                position: absolute;
+                pointer-events: none;
+            }
+            table{
+                z-index: 5;
+                position: absolute;
+                left: 0px;
+                top: 210px;
+                border-spacing: 8px;
+                table-layout:fixed;
+                overflow: hidden;
+                width: 410px;
+            }
+            td {
+                width: 50px;
+                height: 50px;
+                background: none;
+                overflow: hidden;
+                cursor: pointer;
+                z-index: 3;
+            }
+            
+            #bottomDrawer {
+                width: 80px;
+                height: 50px;
+                top: 600px;
+                position: absolute;
+              background: rgba(0,255,0,0.2);
+              cursor: pointer;
+              z-index: 3;
+            }
+            
+            #midDrawer {
+                width: 80px;
+                height: 50px;
+                top: 545px;
+                position: absolute;
+               background: rgba(0,255,0,0.2);
+               cursor: pointer;
+               z-index: 3;
+            }
+            
+            #topDrawer {
+                width: 80px;
+                height: 50px;
+                top: 490px;
+                position: absolute;
+                background: rgba(0,255,0,0.2);
+                cursor: pointer;
+                z-index: 3;
+            }
+            
+            #computer {
+                width: 150px;
+                height: 180px;
+                top: 490px;
+                position: absolute;
+                background: rgba(0,255,0,0.2);
+                cursor: pointer;
+                z-index: 3;
+            }
+            
+            #printer {
+                width: 140px;
+                height: 180px;
+                top: 490px;
+                position: absolute;
+                background: rgba(0,255,0,0.2);
+                cursor: pointer;
+                z-index: 3;
+            }
+            
+            #machine {
+                width: 275px;
+                height: 180px;
+                top: 420px;
+                position: absolute;
+                background: rgba(0,255,0,0.2);
+                cursor: pointer;
+                z-index: 3;
+            }
+            #plug {
+                width: 100px;
+                height: 60px;
+                top: 600px;
+                position: absolute;
+                background: rgba(0,255,0,0.2);
+                cursor: pointer;
+                z-index: 3;
+            }
+            
+            #inventory {
+                position: absolute;
+                top: 0px;
+                left: 0px;
+                width: 900px;
+                height: 100px;
+            }
+            
+            .inventoryItem {
+                width: 120px;
+                height: 120px;
+                display: none;
+                cursor: pointer;
+                margin: 0px;
+            }
+            
+            #safe {
+                width: 350px;
+                height: 270px;
+                top: 400px;
+                position: absolute;
+                background: rgba(0,255,0,0.2);
+                cursor: pointer;
+                z-index: 3;
+            }
+            
+            #numpad {
+                width: 110px;
+                height: 120px;
+                top: 480px;
+                position: absolute;
+                background: rgba(0,255,0,0.2);
+                cursor: pointer;
+                z-index: 3;
+            }
+            
+            #notePopup {
+                position: absolute;
+                top: 100px;
+                padding: 20px;
+                left: 0; 
+                right: 0; 
+                margin-left: auto; 
+                margin-right: auto; 
+                background: white;
+                width: 600px;
+                z-index: 100;
+                font-size: 30px;
+                display: none;
+            }
+            
+            #loginNotePopup {
+                position: absolute;
+                top: 100px;
+                padding: 20px;
+                left: 0; 
+                right: 0; 
+                margin-left: auto; 
+                margin-right: auto; 
+                background: pink;
+                width: 400px;
+                z-index: 100;
+                font-size: 30px;
+                display: none;
+            }
+            
+            .closePopup {
+                position: absolute; top: -25px; right: -25px; width: 50px; height: 50px;background: red; cursor: pointer;
+                border-radius: 100px;
+                text-align: center;
+                font-family: monospace;
+                font-size: 50px;
+            }
+            
+            #safeMenu {
+                position: absolute;
+                top: 100px;
+                padding: 20px;
+                left: 0; 
+                right: 0; 
+                margin-left: auto; 
+                margin-right: auto; 
+                background: white;
+                width: 650px;
+                z-index: 100;
+                font-size: 30px;
+                background: grey;
+                border: 5px solid darkgrey;
+                height: 450px;
+                display: none;
+            }
+            
+            #wheel {
+                position: absolute;
+                left: 0px;
+                top: 0px;
+              width: 400px;
+              height: 400px;
+              padding: 20px;
+              margin: 40px auto;
+              background: url('./ceasarouter.png');
+              background-size: cover;
+            }
+            
+            #innerwheel {
+                 position: absolute;
+                left: 0px;
+                top: 0px;
+              width: 400px;
+              height: 400px;
+              padding: 20px;
+              margin: 40px auto;
+              background: url('./ceasarinner.png');
+              background-size: cover;
+              pointer-events: none;
+            }
+            
+            #safeInput {
+                position: absolute;
+                left: 500px;
+                top: 200px;
+                font-size: 40px;
+                width: 150px;
+            }
+            
+            #safeButton {
+                position: absolute;
+                left: 500px;
+                top: 260px;
+                font-size: 20px;
+                width: 70px;
+            }
+            
+            #safeLeft {
+                position: absolute;
+                left: 300px;
+                top: 50px;
+                font-size: 20px;
+                width: 40px;
+            }
+            
+            #safeRight {
+                position: absolute;
+                left: 350px;
+                top: 50px;
+                font-size: 20px;
+                width: 40px;
+            }
+            
+            #bottomText {
+                position: absolute;
+                bottom: 100px;
+                padding: 20px;
+                left: 0; 
+                right: 0; 
+                margin-left: auto; 
+                margin-right: auto;
+                font-size: 40px;
+                color: white;
+                text-align: center;
+                width: 500px;
+                pointer-events: none;
+                z-index: 50;
+            }
+            
+            #computerConsole {
+                position: absolute;
+                top: 100px;
+                padding: 20px;
+                left: 0; 
+                right: 0; 
+                margin-left: auto; 
+                margin-right: auto; 
+                background: white;
+                width: 650px;
+                z-index: 100;
+                font-size: 30px;
+                background: darkgreen;
+                border: 2px solid #4efc03;
+                height: 450px;
+                display: none;
+            }
+            
+            #consoleInput {
+                color: #4efc03;
+                background: black;
+                font-family: monospace;
+                border: 2px solid #4efc03;
+                font-size: 18px;
+            }
+            
+            #consoleText::-webkit-scrollbar {
+                display: none;
+              }
+            
+            #consoleEnter {
+                color: #4efc03;
+                background: black;
+                font-family: monospace;
+                border: 2px solid #4efc03;
+                cursor: pointer;
+                font-size: 18px;
+            }
+            
+            #consoleEnter:active {
+                background: white;
+                color: black;
+                font-size: 18px;
+            }
+            
+            #consoleText {
+                width: 500px;
+                height: 300px;
+                background: black;
+                font-family: monospace;
+                color: #4efc03;
+                overflow-y: scroll;
+                overflow-x: hidden;
+                border: 2px solid #4efc03;
+                font-size: 18px;
+            }
+            
+            #diagramPopup {
+                position: absolute;
+                top: 100px;
+                padding: 20px;
+                left: 0; 
+                right: 0; 
+                margin-left: auto; 
+                margin-right: auto; 
+                background: none;
+                width: 400px;
+                z-index: 100;
+                height: 400px;
+                font-size: 30px;
+                display: none;
+            }
+            #endScreen {
+                position: absolute;
+                width: 100%;
+                height: 100vh;
+                text-align: center;
+                background: black;
+                z-index: 100000;
+                color: white;
+                font-size: 50px;
+                line-height: 100px;
+                display: none;
+            }
+            #keypadPopup {
+                position: absolute;
+                top: 100px;
+                padding: 20px;
+                left: 0; 
+                right: 0; 
+                margin-left: auto; 
+                margin-right: auto; 
+                background: none;
+                width: 320px;
+                z-index: 100;
+                height: 320px;
+                font-size: 30px;
+                background: rgb(20,20,20);
+            }
+            .endGif {
+                width: 800px;
+                height: 36  0px;
+            }
+            .keypadButton {
+                width: 100px;
+                height: 100px;
+                display: inline-block;
+                background: grey;
+            }
+            
+        </style>
+        <link rel="preconnect" href="https://fonts.googleapisba.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Yuji+Boku&display=swap" rel="stylesheet">
+        <script src="assethandler.js"></script>
+        <script src="domsprite.js"></script>
+        <script src="main.js"></script>
+        <script src="keyhandler.js"></script>
+        <script src="wheel.js"></script>
+    </head>
+    <body>
+        <div id="endScreen">tes trop nuuuuulle reload to restart :)</div>
+        <div id="inventory">
+            <img id="note" class="inventoryItem" onclick="showNote()" src="note.png">
+            <img id="keyRed" class="inventoryItem" onclick="showKey()" src="keyred.png">
+            <img id="keyBlue" class="inventoryItem" onclick="showKey()" src="keyblue.png">
+            <img id="stickyNote" class="inventoryItem" onclick="showLoginPopup()" src="stickynote.png">
+            <img id="diagramIcon" class="inventoryItem" onclick="document.getElementById('diagramPopup').style.display = 'block'" src="diagramicon.png">
+        </div>
+        <div id="gamescreen"></div>
+        <div id="bottomDrawer" onclick="bottomDrawerClicked()"></div>
+        <div id="midDrawer" onclick="midDrawerClicked()"></div>
+        <div id="topDrawer" onclick="topDrawerClicked()"></div>
+        <div id="computer" onclick="computerClicked()"></div>
+        <div id="printer" onclick="printerClicked()"></div>
+        <div id="machine" onclick="machineClicked()"></div>
+        <div id="plug" onclick="plugClicked()"></div>
+        <div id="safe" onclick="safeClicked()"></div>
+        <div id="numpad" onclick="numpadClicked()"></div>
+        
+        <div id="hpCounter" style="position: fixed; bottom: 0px; left: 0px; color: red; font-size: 100px;">0 0 0</div>
+        
+        <div id="computerConsole">
+            <div id="consoleText">
+                C://Login required.
+                <br><span style="color: blue">Username:</span>
+            </div>
+            <input id="consoleInput"></input>
+            <button id="consoleEnter" onclick="verifyComputerInput()">Enter</button>
+            <div class="closePopup" onclick="document.getElementById('computerConsole').style.display = 'none'">X</div>
+        </div>
+        
+        <div id="diagramPopup" onmousedown="document.getElementById('diagramPopup').style.display = 'none'">
+            <img src="diagram.png" width="400px" height="400px">
+            <div class="closePopup">X</div>
+        </div>
+        
+        <div id="machineUI">
+            <div id="machineInstructions">To do: invent cure to permanently delete this monster! I just need to finish one more strand.</div>
+            <input id="machineInput"></input><button onclick="buttonOutput"></button>
+            <div class="closePopup" onclick="document.getElementById('machineUI').style.display = 'none'">X</div>
+        </div>
+        
+        <div id="notePopup" onclick="document.getElementById('notePopup').style.display = 'none'">
+            Hey love, happy anniversary! <br><br> There's so much I wish I could do with you but can't. <br> I wanted to give you something really special so... voila. The goal is to get up the elevator - there's a prize at the top. Hope you enjoy! <br><br>
+            <br>~Tim<br><br>P.S. The encrypted safe code is 'HRVC'!
+            
+            <div class="closePopup">X</div>
+        </div>
+        <div id="loginNotePopup" onclick="document.getElementById('loginNotePopup').style.display = 'none'">
+            User: alittlebite<br>
+            Pass: hehehe
+            <div class="closePopup">X</div>
+        </div>
+        <div id="keypadPopup">
+            <div>
+                <button class="keypadButton" id="keypadButton11" onclick="keypadPressed(1,1)"></button>
+                <button class="keypadButton" id="keypadButton21" onclick="keypadPressed(2,1)"></button>
+                <button class="keypadButton" id="keypadButton31" onclick="keypadPressed(3,1)"></button>
+                <button class="keypadButton" id="keypadButton12" onclick="keypadPressed(1,2)"></button>
+                <button class="keypadButton" id="keypadButton22" onclick="keypadPressed(2,2)"></button>
+                <button class="keypadButton" id="keypadButton32" onclick="keypadPressed(3,2)"></button>
+                <button class="keypadButton" id="keypadButton13" onclick="keypadPressed(1,3)"></button>
+                <button class="keypadButton" id="keypadButton23" onclick="keypadPressed(2,3)"></button>
+                <button class="keypadButton" id="keypadButton33" onclick="keypadPressed(3,3)"></button>
+            </div>
+            <div class="closePopup" onclick="document.getElementById('keypadPopup').style.display = 'none'">X</div>
+        </div>
+        
+        <div id="safeMenu">
+            <div id="wheel">
+            </div>
+            <div id="innerwheel">
+            </div>
+            <input id="safeInput" maxlength="5"></input>
+            <button id="safeButton" onclick="openSafe()">Open</button>
+            <button id="safeLeft" onmousedown="safeDirection = -1" onmouseup="safeDirection = 0"><</button>
+            <button id="safeRight" onmousedown="safeDirection = 1" onmouseup="safeDirection = 0">></button>
+            <div class="closePopup" onclick="document.getElementById('safeMenu').style.display = 'none'">X</div>
+        </div>
+        <div id="bottomText">
+        </div>
+        <table id="lightUpTable">
+            <tr>
+                <td onclick="tableClick('0_0')" id="0_0"></td>
+                <td onclick="tableClick('0_1')" id="0_1"></td>
+                <td onclick="tableClick('0_2')" id="0_2"></td>
+                <td onclick="tableClick('0_3')" id="0_3"></td>
+                <td onclick="tableClick('0_4')" id="0_4"></td>
+                <td onclick="tableClick('0_5')" id="0_5"></td>
+                <td onclick="tableClick('0_6')" id="0_6"></td>
+            </tr>
+            <tr>
+                <td onclick="tableClick('1_0')" id="1_0"></td>
+                <td onclick="tableClick('1_1')" id="1_1"></td>
+                <td onclick="tableClick('1_2')" id="1_2"></td>
+                <td onclick="tableClick('1_3')" id="1_3"></td>
+                <td onclick="tableClick('1_4')" id="1_4"></td>
+                <td onclick="tableClick('1_5')" id="1_5"></td>
+                <td onclick="tableClick('1_6')" id="1_6"></td>
+            </tr>
+            <tr>
+                <td onclick="tableClick('2_0')" id="2_0"></td>
+                <td onclick="tableClick('2_1')" id="2_1"></td>
+                <td onclick="tableClick('2_2')" id="2_2"></td>
+                <td onclick="tableClick('2_3')" id="2_3"></td>
+                <td onclick="tableClick('2_4')" id="2_4"></td>
+                <td onclick="tableClick('2_5')" id="2_5"></td>
+                <td onclick="tableClick('2_6')" id="2_6"></td>
+            </tr>
+            <tr>
+                <td onclick="tableClick('3_0')" id="3_0"></td>
+                <td onclick="tableClick('3_1')" id="3_1"></td>
+                <td onclick="tableClick('3_2')" id="3_2"></td>
+                <td onclick="tableClick('3_3')" id="3_3"></td>
+                <td onclick="tableClick('3_4')" id="3_4"></td>
+                <td onclick="tableClick('3_5')" id="3_5"></td>
+                <td onclick="tableClick('3_6')" id="3_6"></td>
+            </tr>
+            <tr>
+                <td onclick="tableClick('4_0')" id="4_0"></td>
+                <td onclick="tableClick('4_1')" id="4_1"></td>
+                <td onclick="tableClick('4_2')" id="4_2"></td>
+                <td onclick="tableClick('4_3')" id="4_3"></td>
+                <td onclick="tableClick('4_4')" id="4_4"></td>
+                <td onclick="tableClick('4_5')" id="4_5"></td>
+                <td onclick="tableClick('4_6')" id="4_6"></td>
+            </tr>
+            <tr>
+                <td onclick="tableClick('5_0')" id="5_0"></td>
+                <td onclick="tableClick('5_1')" id="5_1"></td>
+                <td onclick="tableClick('5_2')" id="5_2"></td>
+                <td onclick="tableClick('5_3')" id="5_3"></td>
+                <td onclick="tableClick('5_4')" id="5_4"></td>
+                <td onclick="tableClick('5_5')" id="5_5"></td>
+                <td onclick="tableClick('5_6')" id="5_6"></td>
+            </tr>
+            <tr>
+                <td onclick="tableClick('6_0')" id="6_0"></td>
+                <td onclick="tableClick('6_1')" id="6_1"></td>
+                <td onclick="tableClick('6_2')" id="6_2"></td>
+                <td onclick="tableClick('6_3')" id="6_3"></td>
+                <td onclick="tableClick('6_4')" id="6_4"></td>
+                <td onclick="tableClick('6_5')" id="6_5"></td>
+                <td onclick="tableClick('6_6')" id="6_6"></td>
+            </tr>
+        <table>
+    </body>
+</html>
