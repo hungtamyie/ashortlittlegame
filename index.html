@@ -19,6 +19,11 @@
                 image-rendering: pixelated; /* Webkit (non-standard naming)*/
                 overflow: hidden;
                 font-family: 'Yuji Boku', serif;
+                user-select: none; /* supported by Chrome and Opera */
+   -webkit-user-select: none; /* Safari */
+   -khtml-user-select: none; /* Konqueror HTML */
+   -moz-user-select: none; /* Firefox */
+   -ms-user-select: none; /* Internet Explorer/Edge */
             }
             
             .domSprite {
@@ -49,7 +54,6 @@
                 height: 50px;
                 top: 600px;
                 position: absolute;
-              background: rgba(0,255,0,0.2);
               cursor: pointer;
               z-index: 3;
             }
@@ -59,7 +63,6 @@
                 height: 50px;
                 top: 545px;
                 position: absolute;
-               background: rgba(0,255,0,0.2);
                cursor: pointer;
                z-index: 3;
             }
@@ -69,7 +72,6 @@
                 height: 50px;
                 top: 490px;
                 position: absolute;
-                background: rgba(0,255,0,0.2);
                 cursor: pointer;
                 z-index: 3;
             }
@@ -79,7 +81,6 @@
                 height: 180px;
                 top: 490px;
                 position: absolute;
-                background: rgba(0,255,0,0.2);
                 cursor: pointer;
                 z-index: 3;
             }
@@ -89,7 +90,6 @@
                 height: 180px;
                 top: 490px;
                 position: absolute;
-                background: rgba(0,255,0,0.2);
                 cursor: pointer;
                 z-index: 3;
             }
@@ -99,7 +99,6 @@
                 height: 180px;
                 top: 420px;
                 position: absolute;
-                background: rgba(0,255,0,0.2);
                 cursor: pointer;
                 z-index: 3;
             }
@@ -108,7 +107,6 @@
                 height: 60px;
                 top: 600px;
                 position: absolute;
-                background: rgba(0,255,0,0.2);
                 cursor: pointer;
                 z-index: 3;
             }
@@ -134,7 +132,6 @@
                 height: 270px;
                 top: 400px;
                 position: absolute;
-                background: rgba(0,255,0,0.2);
                 cursor: pointer;
                 z-index: 3;
             }
@@ -144,7 +141,6 @@
                 height: 120px;
                 top: 480px;
                 position: absolute;
-                background: rgba(0,255,0,0.2);
                 cursor: pointer;
                 z-index: 3;
             }
@@ -176,6 +172,22 @@
                 width: 400px;
                 z-index: 100;
                 font-size: 30px;
+                display: none;
+            }
+            
+            #lightupPopup {
+                position: absolute;
+                top: 100px;
+                padding: 20px;
+                left: 0; 
+                right: 0; 
+                margin-left: auto; 
+                margin-right: auto; 
+                background: green;
+                width: 800px;
+                color: white;
+                z-index: 100;
+                font-size: 25px;
                 display: none;
             }
             
@@ -376,6 +388,7 @@
                 height: 320px;
                 font-size: 30px;
                 background: rgb(20,20,20);
+                display: none;
             }
             .endGif {
                 width: 800px;
@@ -386,6 +399,51 @@
                 height: 100px;
                 display: inline-block;
                 background: grey;
+            }
+            
+            #machineUI {
+                position: absolute;
+                top: 100px;
+                padding: 20px;
+                left: 0; 
+                right: 0; 
+                margin-left: auto; 
+                margin-right: auto; 
+                background: none;
+                width: 500px;
+                z-index: 100;
+                height: 320px;
+                font-size: 30px;
+                background: rgb(20,20,20);
+                font-family: monospace;
+                color: white;
+                display: none;
+            }
+            
+            .machinePair {
+                width: 50px;
+                height: 50px;
+                background: grey;
+                display: inline-block;
+                text-align: center;
+                margin: 5px;
+            }
+            
+            .clickable {
+                background: lightgrey;
+                cursor: pointer;
+                color: black;
+            }
+            
+            #startScreen{
+                position: absolute;
+                width: 100%;
+                height: 100vh;
+                text-align: center;
+                background: black;
+                z-index: 100000;
+                color: white;
+                font-size: 50px;
             }
             
         </style>
@@ -400,12 +458,15 @@
     </head>
     <body>
         <div id="endScreen">tes trop nuuuuulle reload to restart :)</div>
+        <div id="startScreen" onclick="startGame()"><br><img src="titlescreen.png" width="60%" height="auto"></img><br>Click to start.</div>
         <div id="inventory">
             <img id="note" class="inventoryItem" onclick="showNote()" src="note.png">
             <img id="keyRed" class="inventoryItem" onclick="showKey()" src="keyred.png">
             <img id="keyBlue" class="inventoryItem" onclick="showKey()" src="keyblue.png">
             <img id="stickyNote" class="inventoryItem" onclick="showLoginPopup()" src="stickynote.png">
             <img id="diagramIcon" class="inventoryItem" onclick="document.getElementById('diagramPopup').style.display = 'block'" src="diagramicon.png">
+            <img id="lightupIcon" class="inventoryItem" onclick="document.getElementById('lightupPopup').style.display = 'block'" src="lightupicon.png">
+            <img id="roseIcon" class="inventoryItem" onclick="roseClicked()" src="rose.png">
         </div>
         <div id="gamescreen"></div>
         <div id="bottomDrawer" onclick="bottomDrawerClicked()"></div>
@@ -437,13 +498,30 @@
         
         <div id="machineUI">
             <div id="machineInstructions">To do: invent cure to permanently delete this monster! I just need to finish one more strand.</div>
-            <input id="machineInput"></input><button onclick="buttonOutput"></button>
+            <div class="machinePair">A</div>
+            <div class="machinePair">T</div>
+            <div class="machinePair">C</div>
+            <div class="machinePair">G</div>
+            <div class="machinePair">T</div>
+            <br>
+            <div id="machinePair0" onclick ="machinePairClicked(0)" class="machinePair clickable">A</div>
+            <div id="machinePair1" onclick ="machinePairClicked(1)" class="machinePair clickable">A</div>
+            <div id="machinePair2" onclick ="machinePairClicked(2)" class="machinePair clickable">A</div>
+            <div id="machinePair3" onclick ="machinePairClicked(3)" class="machinePair clickable">A</div>
+            <div id="machinePair4" onclick ="machinePairClicked(4)" class="machinePair clickable">A</div>
             <div class="closePopup" onclick="document.getElementById('machineUI').style.display = 'none'">X</div>
         </div>
-        
+        <div id="lightupPopup" onclick="document.getElementById('lightupPopup').style.display = 'none'">
+            When I was 4 I smelled the roses,<br>
+            When I was 3 I climbed the rectangular tree,<br>
+            When I was 2 I did some fishing too,<br>
+            When I was 1 the triangle tree gave me shade from the sun,<br>
+            When I was 0 I emerged from a hole,<br>
+            <br><br>I don't think anybody but you could solve this one...<div class="closePopup">X</div>
+        </div>
         <div id="notePopup" onclick="document.getElementById('notePopup').style.display = 'none'">
-            Hey love, happy anniversary! <br><br> There's so much I wish I could do with you but can't. <br> I wanted to give you something really special so... voila. The goal is to get up the elevator - there's a prize at the top. Hope you enjoy! <br><br>
-            <br>~Tim<br><br>P.S. The encrypted safe code is 'HRVC'!
+            Hey love, happy anniversary! <br><br> Sorry for taking so long. <br> I wanted to give you something really special so... voila. The goal is to get up the elevator - there's a prize at the top. Hope you enjoy! <br><br>
+            <br>~Tim<br><br>P.S. The encrypted safe code is 'RBFM'!
             
             <div class="closePopup">X</div>
         </div>

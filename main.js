@@ -3,7 +3,7 @@ var screen;
 window.onload = function(){
     screen = document.getElementById("gamescreen")
     handleWheel();
-    assetHandler.loadImages([["bunker", "bunker.png"],["lili", "lili.png"],["spider", "spider.png"],["tim", "timase.png"], ["enemy", "enemy.png"]], function(){startGame()})
+    assetHandler.loadImages([["bunker", "bunker.png"],["lili", "lili.png"],["spider", "spider.png"],["tim", "timase.png"], ["enemy", "enemy.png"]], function(){})
 }
 
 var lilisprite;
@@ -54,7 +54,7 @@ function startGame(){
     environmentOverlayE.appendSprite(screen)
     environmentOverlayE.updateDrawing(0,250,400,50,1)
     environmentOverlayE.updatePosition(0,200,4000,500)
-    environmentOverlayE.updateZIndex(1)
+    environmentOverlayE.updateZIndex(2)
     environmentOverlayE.hide()
     
     environmentOverlayF = new DomSprite(assetHandler.images.bunker)
@@ -79,6 +79,7 @@ function startGame(){
     spawnEnemy("creature")
     
     var input = document.getElementById("consoleInput");
+    elem("startScreen").style.display = "none";
     
     // Execute a function when the user releases a key on the keyboard
     input.addEventListener("keyup", function(event) {
@@ -98,9 +99,9 @@ function startGame(){
 
 
 var lili = {
-    x: 2500,
+    x: 1000,
     y: 0,
-    dir: "right",
+    dir: "left",
     curFrame: 0,
     frameCounter: 0,
     action: "idle",
@@ -315,6 +316,11 @@ function tick(){
     
     if(lili.action!= "idle"){
         document.getElementById("safeMenu").style.display = "none";
+        document.getElementById("machineUI").style.display = "none";
+    }
+    
+    if(lili.x < 490 || lili.x > 955.5){
+        document.getElementById("computerConsole").style.display = "none";
     }
     
     
@@ -325,8 +331,6 @@ function tick(){
     
     if(lili.x > 3546.5){lili.x = 3546.5}
     if(lili.x < 80){lili.x = 80}
-    if(tim.x > 3546.5){tim.x = 3546.5}
-    if(tim.x < 80){tim.x = 80}
     
     if(tim.goal == "bisou"){
         if(lili.x > tim.x){
@@ -372,6 +376,12 @@ function tick(){
     }
     else if(tim.goal == "idle"){
         tim.action = "idle";
+        if(lili.x > tim.x){
+            tim.dir = "right"
+        }
+        else {
+            tim.dir = "left"
+        }
     }
     
     bisou -= delta;
@@ -385,11 +395,11 @@ function tick(){
 }
 
 var tim = {
-    x: 2500,
+    x: 3800,
     y: 0,
-    dir: "right",
+    dir: "left",
     curFrame: 0,
-    goal: "none",
+    goal: "idle",
     frameCounter: 0,
     action: "idle",
     gravity: 0,
@@ -415,6 +425,10 @@ function callTim(){
     }
     else {
         message("<span style='color: orange'>you: tim tim tim tim !</span>")
+    }
+    
+    if(Math.random() < 0.1){
+        message("<span style='color: lightblue'>tim: i love you</span>")
     }
 }
 
@@ -505,6 +519,32 @@ function keypadPressed(x,y){
 
 var goingToElevator = false;
 var endSequenceCounter = -1;
+
+var machinePairSetup = ["A", "A", "A", "A", "A"]
+function machinePairClicked(num){
+    if(machinePairSetup[num] == "A"){
+        machinePairSetup[num] = "G";
+    }
+    else if(machinePairSetup[num] == "G"){
+        machinePairSetup[num] = "T";
+    }
+    else if(machinePairSetup[num] == "T"){
+        machinePairSetup[num] = "C";
+    }
+    else if(machinePairSetup[num] == "C"){
+        machinePairSetup[num] = "A";
+    }
+    elem("machinePair" + num).innerHTML = machinePairSetup[num]
+    if(machinePairSetup[0]+machinePairSetup[1]+machinePairSetup[2]+machinePairSetup[3]+machinePairSetup[4] == "TAGCA"){
+        elem("machinePair" + num).innerHTML = machinePairSetup[num];
+        haveSerum = true;
+        environmentOverlayE.show();
+        message("You now have a serum! Next time you kill the monster he won't revive.")
+        elem("machineUI").style.display = "none";
+        elem("machine").style.width = "0px";
+    }
+    console.log(machinePairSetup[0]+machinePairSetup[1]+machinePairSetup[2]+machinePairSetup[3]+machinePairSetup[4])
+}
 
 function deleteCreature(){
     enemies[0].domSprite.hide();
@@ -757,7 +797,6 @@ function verifyComputerInput(){
     elem("consoleInput").value = '';
     elem("consoleText").scrollTop =  elem("consoleText").scrollHeight;
 }
-
 function computerClicked(){
     if(lili.x > 490 && lili.x < 955.5){
         elem("computerConsole").style.display = "block";
@@ -772,7 +811,7 @@ function printerClicked(){
         if(hasPrinted){
             message("You've received a mysterious diagram!")
             environmentOverlayD.hide();
-            elem("diagramIcon").style.display = "block";
+            elem("diagramIcon").style.display = "inline";
             hasPrinted = false;
         }
         else {
@@ -796,9 +835,11 @@ function numpadClicked(){
 function topDrawerClicked(){
     if(lili.x > 791 && lili.x < 1121.5){
         if(hasRedKey){
-            elem("keyRed").style.display = "inline";
-            hasRedKey = true;
+            elem("lightupIcon").style.display = "inline";
+            elem("roseIcon").style.display = "inline";
             document.getElementById("topDrawer").style.width = "0px";
+            message("You've received a confusing poem and some roses!")
+            
         }
         else {
             message("Needs a key!")
@@ -807,6 +848,10 @@ function topDrawerClicked(){
     else {
         message("You're too far.")
     }
+}
+
+function roseClicked(){
+    message("It smells good. This is in return for all the loup garou roses <3");
 }
 
 function showNote(){
@@ -833,7 +878,7 @@ function showKey(){
 function machineClicked(){
     if(lili.x > 1528 && lili.x < 2132){
         if(machinePlugged){
-            
+            elem("machineUI").style.display = "block";
         }
         else {
             message("hmm... it appears to be broken")
@@ -869,6 +914,7 @@ function elem(e){
 
 var hasRedKey = false;
 var hasBlueKey = false;
+var haveSerum = false;
 
 function drawLili(delta){
     var frameX = 0;
@@ -921,6 +967,12 @@ function drawLili(delta){
                             enemies[i].animationCounter = 0;
                             enemies[i].action = "damage";
                             if(enemies[i].hp <= 0){
+                                if(haveSerum){
+                                    enemies[i].dead = true;
+                                    environmentOverlayE.hide();
+                                    message("Serum used.")
+                                    deleteCreature()
+                                }
                                 enemies[i].hp = maxEnemyHp;
                                 maxEnemyHp += 15;
                                 enemies[i].action = "dying";
@@ -934,6 +986,12 @@ function drawLili(delta){
                             enemies[i].animationCounter = 0;
                             enemies[i].action = "damage";
                             if(enemies[i].hp <= 0){
+                                if(haveSerum){
+                                    enemies[i].dead = true;
+                                    environmentOverlayE.hide();
+                                    message("Serum used.")
+                                    deleteCreature()
+                                }
                                 enemies[i].hp = maxEnemyHp;
                                 maxEnemyHp += 15;
                                 enemies[i].action = "dying";
